@@ -1,0 +1,15 @@
+---
+title: "Data Visualisations"
+author: "Christoffer Nordenlöw"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+output: bookdown::gitbook
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Intro {-}
+
+*This repository includes useful templates, formulas and code for R, VBA, SQL, also in combination with Bloomberg formulas and Fixed Income analytics.*
