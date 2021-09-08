@@ -1,0 +1,63 @@
+# Plots
+
+## Line Plots
+
+### Basic Line Plot
+
+
+
+
+**Create Dataframe**
+```{r, echo=TRUE, error = FALSE, messages=FALSE, warning=FALSE}
+
+#bookdown::render_book("index.Rmd")
+#https://aeturrell.github.io/coding-for-economists/vis-common-plots.html#id18
+
+#```{r setup, include=FALSE}
+#knitr::opts_chunk$set(echo = TRUE)
+#library(tidyverse)
+#```
+
+#library(tidyverse)
+
+### Create sample dataframe
+df <- tibble(
+  date = seq(as.Date('2015-01-01'), as.Date('2021-08-31'), by = 'month')-1,
+  gdp = 2 + round(runif(80, min=-1, max=1),2),
+  pce = round(runif(80, min=-1, max=3.5),2),
+  pceCore = pce + round(runif(80, min=-1, max=0.5),2)
+)
+
+### Prepare plotting: Convert to Longer dataframe
+df <- pivot_longer(df,
+                   -date,
+                   names_to = "variable",
+                   values_to = "values")
+
+
+
+### Create Line plot with pce
+plotData <- df %>%
+  filter(variable == "pce")
+
+
+### Plot
+plot <- ggplot(plotData, aes(x = date, y = values, group = variable, color = variable)) + 
+  geom_line(size = 1)+
+  geom_hline(yintercept = 2, linetype = "dashed")+
+  theme_minimal() +
+  theme(legend.position="bottom",
+        legend.title = element_blank(),
+        plot.caption=element_text(hjust=0),
+        plot.subtitle=element_text(face="italic"),
+        plot.title=element_text(size=16,face="bold"))+
+  theme(panel.grid.minor = element_line(colour = "white"))+
+  labs(x="Date",y="Percent",
+       title="A title that fits",
+       subtitle="A subtitle",
+       caption="Source: Random numbers")
+
+plot
+
+```
+

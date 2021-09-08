@@ -9,7 +9,10 @@ output: bookdown::gitbook
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
 ```
 # Intro {-}
 
-*This repository includes useful templates, formulas and code for R, VBA, SQL, also in combination with Bloomberg formulas and Fixed Income analytics.*
+*This repository includes useful plots and tables.*
+
+https://aeturrell.github.io/coding-for-economists/vis-common-plots.html#id18
