@@ -24,7 +24,7 @@
 <meta name="author" content="Christoffer Nordenlöw" />
 
 
-<meta name="date" content="2021-09-08" />
+<meta name="date" content="2021-09-09" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -131,6 +131,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1" data-path="plots.html"><a href="plots.html"><i class="fa fa-check"></i><b>1</b> Plots</a><ul>
 <li class="chapter" data-level="1.1" data-path="plots.html"><a href="plots.html#line-plots"><i class="fa fa-check"></i><b>1.1</b> Line Plots</a><ul>
 <li class="chapter" data-level="1.1.1" data-path="plots.html"><a href="plots.html#basic-line-plot"><i class="fa fa-check"></i><b>1.1.1</b> Basic Line Plot</a></li>
+<li class="chapter" data-level="1.1.2" data-path="plots.html"><a href="plots.html#scatterplot"><i class="fa fa-check"></i><b>1.1.2</b> Scatterplot</a></li>
+<li class="chapter" data-level="1.1.3" data-path="plots.html"><a href="plots.html#bar-chart"><i class="fa fa-check"></i><b>1.1.3</b> Bar Chart</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -156,53 +158,136 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">1.1</span> Line Plots</h2>
 <div id="basic-line-plot" class="section level3">
 <h3><span class="header-section-number">1.1.1</span> Basic Line Plot</h3>
-<p><strong>Create Dataframe</strong></p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co">#```{r setup, include=FALSE}</span></a>
-<a class="sourceLine" id="cb1-2" title="2"><span class="co">#knitr::opts_chunk$set(echo = TRUE)</span></a>
-<a class="sourceLine" id="cb1-3" title="3"><span class="co">#library(tidyverse)</span></a>
-<a class="sourceLine" id="cb1-4" title="4"><span class="co">#```</span></a>
-<a class="sourceLine" id="cb1-5" title="5"></a>
-<a class="sourceLine" id="cb1-6" title="6"><span class="co">#library(tidyverse)</span></a>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co">#bookdown::render_book(&quot;index.Rmd&quot;)</span></a>
+<a class="sourceLine" id="cb1-2" title="2"></a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="co">#```{r setup, include=FALSE}</span></a>
+<a class="sourceLine" id="cb1-4" title="4"><span class="co">#knitr::opts_chunk$set(echo = TRUE)</span></a>
+<a class="sourceLine" id="cb1-5" title="5"><span class="co">#library(tidyverse)</span></a>
+<a class="sourceLine" id="cb1-6" title="6"><span class="co">#```</span></a>
 <a class="sourceLine" id="cb1-7" title="7"></a>
-<a class="sourceLine" id="cb1-8" title="8"><span class="co">### Create sample dataframe</span></a>
-<a class="sourceLine" id="cb1-9" title="9">df &lt;-<span class="st"> </span><span class="kw">tibble</span>(</a>
-<a class="sourceLine" id="cb1-10" title="10">  <span class="dt">date =</span> <span class="kw">seq</span>(<span class="kw">as.Date</span>(<span class="st">&#39;2015-01-01&#39;</span>), <span class="kw">as.Date</span>(<span class="st">&#39;2021-08-31&#39;</span>), <span class="dt">by =</span> <span class="st">&#39;month&#39;</span>)<span class="op">-</span><span class="dv">1</span>,</a>
-<a class="sourceLine" id="cb1-11" title="11">  <span class="dt">gdp =</span> <span class="dv">2</span> <span class="op">+</span><span class="st"> </span><span class="kw">round</span>(<span class="kw">runif</span>(<span class="dv">80</span>, <span class="dt">min=</span><span class="op">-</span><span class="dv">1</span>, <span class="dt">max=</span><span class="dv">1</span>),<span class="dv">2</span>),</a>
-<a class="sourceLine" id="cb1-12" title="12">  <span class="dt">pce =</span> <span class="kw">round</span>(<span class="kw">runif</span>(<span class="dv">80</span>, <span class="dt">min=</span><span class="op">-</span><span class="dv">1</span>, <span class="dt">max=</span><span class="fl">3.5</span>),<span class="dv">2</span>),</a>
-<a class="sourceLine" id="cb1-13" title="13">  <span class="dt">pceCore =</span> pce <span class="op">+</span><span class="st"> </span><span class="kw">round</span>(<span class="kw">runif</span>(<span class="dv">80</span>, <span class="dt">min=</span><span class="op">-</span><span class="dv">1</span>, <span class="dt">max=</span><span class="fl">0.5</span>),<span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb1-14" title="14">)</a>
-<a class="sourceLine" id="cb1-15" title="15"></a>
-<a class="sourceLine" id="cb1-16" title="16"><span class="co">### Prepare plotting: Convert to Longer dataframe</span></a>
-<a class="sourceLine" id="cb1-17" title="17">df &lt;-<span class="st"> </span><span class="kw">pivot_longer</span>(df,</a>
-<a class="sourceLine" id="cb1-18" title="18">                   <span class="op">-</span>date,</a>
-<a class="sourceLine" id="cb1-19" title="19">                   <span class="dt">names_to =</span> <span class="st">&quot;variable&quot;</span>,</a>
-<a class="sourceLine" id="cb1-20" title="20">                   <span class="dt">values_to =</span> <span class="st">&quot;values&quot;</span>)</a>
-<a class="sourceLine" id="cb1-21" title="21"></a>
+<a class="sourceLine" id="cb1-8" title="8"><span class="co">#library(tidyverse)</span></a>
+<a class="sourceLine" id="cb1-9" title="9"></a>
+<a class="sourceLine" id="cb1-10" title="10"><span class="co">#####################################################################################################</span></a>
+<a class="sourceLine" id="cb1-11" title="11"><span class="co">### Create sample dataframe and prepare for plotting                                                                     </span></a>
+<a class="sourceLine" id="cb1-12" title="12"><span class="co">#####################################################################################################</span></a>
+<a class="sourceLine" id="cb1-13" title="13"></a>
+<a class="sourceLine" id="cb1-14" title="14">df &lt;-<span class="st"> </span><span class="kw">tibble</span>(</a>
+<a class="sourceLine" id="cb1-15" title="15">  <span class="dt">date =</span> <span class="kw">seq</span>(<span class="kw">as.Date</span>(<span class="st">&#39;2016-09-01&#39;</span>), <span class="kw">as.Date</span>(<span class="st">&#39;2021-08-31&#39;</span>), <span class="dt">by =</span> <span class="st">&#39;quarter&#39;</span>)<span class="op">-</span><span class="dv">1</span>,</a>
+<a class="sourceLine" id="cb1-16" title="16">  <span class="dt">gdp =</span> <span class="dv">3</span> <span class="op">+</span><span class="st"> </span><span class="kw">round</span>(<span class="kw">runif</span>(<span class="dv">20</span>, <span class="dt">min=</span><span class="op">-</span><span class="fl">0.10</span>, <span class="dt">max=</span><span class="fl">0.20</span>),<span class="dv">2</span>),</a>
+<a class="sourceLine" id="cb1-17" title="17">  <span class="dt">pceCore =</span> <span class="kw">c</span>(<span class="fl">1.21</span>, <span class="fl">1.25</span>, <span class="fl">1.30</span>, <span class="fl">1.40</span>, <span class="fl">1.50</span>, <span class="fl">1.61</span>, <span class="fl">1.65</span>, <span class="fl">1.75</span>, <span class="fl">1.67</span>, <span class="fl">1.71</span>, <span class="fl">1.80</span>, <span class="fl">1.90</span>, <span class="fl">1.95</span>, <span class="fl">2.40</span>, <span class="fl">2.30</span>, <span class="fl">2.15</span>, <span class="fl">2.25</span>, <span class="fl">2.05</span>, <span class="fl">1.95</span>, <span class="fl">2.10</span>),</a>
+<a class="sourceLine" id="cb1-18" title="18">  <span class="dt">pce =</span> pceCore <span class="op">+</span><span class="st"> </span><span class="kw">round</span>(<span class="kw">runif</span>(<span class="dv">20</span>, <span class="dt">min=</span><span class="op">-</span><span class="dv">1</span>, <span class="dt">max=</span><span class="fl">0.5</span>),<span class="dv">2</span>),</a>
+<a class="sourceLine" id="cb1-19" title="19">  <span class="dt">us10y =</span> <span class="kw">c</span>(<span class="fl">1.5</span>, <span class="fl">1.55</span>, <span class="fl">1.57</span>, <span class="fl">1.60</span>, <span class="fl">1.68</span>, <span class="fl">1.65</span>, <span class="fl">1.69</span>, <span class="fl">1.75</span>, <span class="fl">1.81</span>,<span class="fl">1.79</span>, <span class="fl">1.74</span>, <span class="fl">1.71</span>, <span class="fl">1.66</span>,<span class="fl">1.70</span>, <span class="fl">1.75</span>, <span class="fl">1.73</span>, <span class="fl">1.69</span>, <span class="fl">1.61</span>, <span class="fl">1.59</span>, <span class="fl">1.55</span>),</a>
+<a class="sourceLine" id="cb1-20" title="20">  <span class="dt">us2y =</span> us10y <span class="fl">-0.05</span> <span class="op">+</span><span class="st"> </span><span class="kw">round</span>(<span class="kw">runif</span>(<span class="dv">20</span>, <span class="dt">min=</span><span class="op">-</span><span class="fl">0.075</span>, <span class="dt">max=</span><span class="fl">0.075</span>),<span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb1-21" title="21">)</a>
 <a class="sourceLine" id="cb1-22" title="22"></a>
-<a class="sourceLine" id="cb1-23" title="23"></a>
-<a class="sourceLine" id="cb1-24" title="24"><span class="co">### Create Line plot with pce</span></a>
-<a class="sourceLine" id="cb1-25" title="25">plotData &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb1-26" title="26"><span class="st">  </span><span class="kw">filter</span>(variable <span class="op">==</span><span class="st"> &quot;pce&quot;</span>)</a>
+<a class="sourceLine" id="cb1-23" title="23">df &lt;-<span class="st"> </span><span class="kw">pivot_longer</span>(df, <span class="co">#create longer dataframe, dplyr </span></a>
+<a class="sourceLine" id="cb1-24" title="24">                   <span class="op">-</span>date,</a>
+<a class="sourceLine" id="cb1-25" title="25">                   <span class="dt">names_to =</span> <span class="st">&quot;variable&quot;</span>,</a>
+<a class="sourceLine" id="cb1-26" title="26">                   <span class="dt">values_to =</span> <span class="st">&quot;values&quot;</span>)</a>
 <a class="sourceLine" id="cb1-27" title="27"></a>
-<a class="sourceLine" id="cb1-28" title="28"></a>
-<a class="sourceLine" id="cb1-29" title="29"><span class="co">### Plot</span></a>
-<a class="sourceLine" id="cb1-30" title="30">plot &lt;-<span class="st"> </span><span class="kw">ggplot</span>(plotData, <span class="kw">aes</span>(<span class="dt">x =</span> date, <span class="dt">y =</span> values, <span class="dt">group =</span> variable, <span class="dt">color =</span> variable)) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb1-31" title="31"><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="dv">1</span>)<span class="op">+</span></a>
-<a class="sourceLine" id="cb1-32" title="32"><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">2</span>, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>)<span class="op">+</span></a>
-<a class="sourceLine" id="cb1-33" title="33"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb1-34" title="34"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="st">&quot;bottom&quot;</span>,</a>
-<a class="sourceLine" id="cb1-35" title="35">        <span class="dt">legend.title =</span> <span class="kw">element_blank</span>(),</a>
-<a class="sourceLine" id="cb1-36" title="36">        <span class="dt">plot.caption=</span><span class="kw">element_text</span>(<span class="dt">hjust=</span><span class="dv">0</span>),</a>
-<a class="sourceLine" id="cb1-37" title="37">        <span class="dt">plot.subtitle=</span><span class="kw">element_text</span>(<span class="dt">face=</span><span class="st">&quot;italic&quot;</span>),</a>
-<a class="sourceLine" id="cb1-38" title="38">        <span class="dt">plot.title=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">16</span>,<span class="dt">face=</span><span class="st">&quot;bold&quot;</span>))<span class="op">+</span></a>
-<a class="sourceLine" id="cb1-39" title="39"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid.minor =</span> <span class="kw">element_line</span>(<span class="dt">colour =</span> <span class="st">&quot;white&quot;</span>))<span class="op">+</span></a>
-<a class="sourceLine" id="cb1-40" title="40"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x=</span><span class="st">&quot;Date&quot;</span>,<span class="dt">y=</span><span class="st">&quot;Percent&quot;</span>,</a>
-<a class="sourceLine" id="cb1-41" title="41">       <span class="dt">title=</span><span class="st">&quot;A title that fits&quot;</span>,</a>
-<a class="sourceLine" id="cb1-42" title="42">       <span class="dt">subtitle=</span><span class="st">&quot;A subtitle&quot;</span>,</a>
-<a class="sourceLine" id="cb1-43" title="43">       <span class="dt">caption=</span><span class="st">&quot;Source: Random numbers&quot;</span>)</a>
-<a class="sourceLine" id="cb1-44" title="44"></a>
-<a class="sourceLine" id="cb1-45" title="45">plot</a></code></pre></div>
+<a class="sourceLine" id="cb1-28" title="28">variables =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;pce&quot;</span>, <span class="st">&quot;pceCore&quot;</span>)</a>
+<a class="sourceLine" id="cb1-29" title="29"></a>
+<a class="sourceLine" id="cb1-30" title="30">plotData &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb1-31" title="31"><span class="st">  </span><span class="kw">filter</span>(variable <span class="op">%in%</span><span class="st"> </span>variables)</a>
+<a class="sourceLine" id="cb1-32" title="32"></a>
+<a class="sourceLine" id="cb1-33" title="33"><span class="co">#####################################################################################################</span></a>
+<a class="sourceLine" id="cb1-34" title="34"><span class="co">### Plot                                                                    </span></a>
+<a class="sourceLine" id="cb1-35" title="35"><span class="co">#####################################################################################################</span></a>
+<a class="sourceLine" id="cb1-36" title="36"><span class="co">#Set color palette</span></a>
+<a class="sourceLine" id="cb1-37" title="37">color_palette &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;blue2&quot;</span>, <span class="st">&quot;darkgreen&quot;</span>, <span class="st">&quot;darkgoldenrod1&quot;</span>, <span class="st">&quot;brown1&quot;</span>, <span class="st">&quot;azure4&quot;</span>, </a>
+<a class="sourceLine" id="cb1-38" title="38">              <span class="st">&quot;darkorchid3&quot;</span>, <span class="st">&quot;coral1&quot;</span>, <span class="st">&quot;#8E9CA3&quot;</span>, <span class="st">&quot;#556670&quot;</span>, <span class="st">&quot;#000000&quot;</span>)</a>
+<a class="sourceLine" id="cb1-39" title="39"></a>
+<a class="sourceLine" id="cb1-40" title="40">plot &lt;-<span class="st"> </span><span class="kw">ggplot</span>(plotData, <span class="kw">aes</span>(<span class="dt">x =</span> date, <span class="dt">y =</span> values, <span class="dt">group =</span> variable, <span class="dt">color =</span> variable)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb1-41" title="41"><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="dv">1</span>)<span class="op">+</span></a>
+<a class="sourceLine" id="cb1-42" title="42"><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">2</span>, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>)<span class="op">+</span></a>
+<a class="sourceLine" id="cb1-43" title="43"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb1-44" title="44"><span class="st">  </span><span class="kw">scale_colour_manual</span>(<span class="dt">values =</span> color_palette)<span class="op">+</span></a>
+<a class="sourceLine" id="cb1-45" title="45"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="st">&quot;bottom&quot;</span>,</a>
+<a class="sourceLine" id="cb1-46" title="46">        <span class="dt">legend.title =</span> <span class="kw">element_blank</span>(),</a>
+<a class="sourceLine" id="cb1-47" title="47">        <span class="dt">plot.caption=</span><span class="kw">element_text</span>(<span class="dt">hjust=</span><span class="dv">0</span>),</a>
+<a class="sourceLine" id="cb1-48" title="48">        <span class="dt">plot.subtitle=</span><span class="kw">element_text</span>(<span class="dt">face=</span><span class="st">&quot;italic&quot;</span>),</a>
+<a class="sourceLine" id="cb1-49" title="49">        <span class="dt">plot.title=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">16</span>,<span class="dt">face=</span><span class="st">&quot;bold&quot;</span>))<span class="op">+</span></a>
+<a class="sourceLine" id="cb1-50" title="50"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid.minor =</span> <span class="kw">element_line</span>(<span class="dt">colour =</span> <span class="st">&quot;white&quot;</span>))<span class="op">+</span></a>
+<a class="sourceLine" id="cb1-51" title="51"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x=</span><span class="st">&quot;Date&quot;</span>,<span class="dt">y=</span><span class="st">&quot;Percent&quot;</span>,</a>
+<a class="sourceLine" id="cb1-52" title="52">       <span class="dt">title=</span><span class="st">&quot;PCE&quot;</span>,</a>
+<a class="sourceLine" id="cb1-53" title="53">       <span class="dt">subtitle=</span><span class="st">&quot;PCE and Core PCE&quot;</span>,</a>
+<a class="sourceLine" id="cb1-54" title="54">       <span class="dt">caption=</span><span class="st">&quot;Source: Random numbers&quot;</span>)</a>
+<a class="sourceLine" id="cb1-55" title="55"></a>
+<a class="sourceLine" id="cb1-56" title="56">plot </a></code></pre></div>
 <p><img src="_main_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+</div>
+<div id="scatterplot" class="section level3">
+<h3><span class="header-section-number">1.1.2</span> Scatterplot</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="co">#library(tidyverse)</span></a>
+<a class="sourceLine" id="cb2-2" title="2"><span class="co">#####################################################################################################</span></a>
+<a class="sourceLine" id="cb2-3" title="3"><span class="co">### Create sample dataframe                                                                       </span></a>
+<a class="sourceLine" id="cb2-4" title="4"><span class="co">#####################################################################################################</span></a>
+<a class="sourceLine" id="cb2-5" title="5"></a>
+<a class="sourceLine" id="cb2-6" title="6">df &lt;-<span class="st"> </span><span class="kw">tibble</span>(</a>
+<a class="sourceLine" id="cb2-7" title="7">  <span class="dt">timeToMaturity =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">10</span>,<span class="dv">20</span>,<span class="dv">30</span>),</a>
+<a class="sourceLine" id="cb2-8" title="8">  <span class="dt">bondName =</span> <span class="kw">paste</span>(<span class="st">&quot;UST&quot;</span>, timeToMaturity, <span class="dt">sep=</span><span class="st">&quot;&quot;</span>),</a>
+<a class="sourceLine" id="cb2-9" title="9">  <span class="dt">rate =</span> <span class="kw">c</span>(<span class="fl">1.5</span>,<span class="fl">1.45</span>,<span class="fl">1.25</span>,<span class="fl">1.35</span>,<span class="fl">1.60</span>,<span class="fl">1.75</span>,<span class="fl">1.80</span>,<span class="fl">2.15</span>,<span class="fl">2.2</span>),</a>
+<a class="sourceLine" id="cb2-10" title="10">  <span class="dt">relativeValue =</span> <span class="kw">round</span>(<span class="kw">runif</span>(<span class="dv">9</span>, <span class="dt">min=</span><span class="op">-</span><span class="dv">2</span>, <span class="dt">max=</span><span class="dv">2</span>),<span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb2-11" title="11">) </a>
+<a class="sourceLine" id="cb2-12" title="12"></a>
+<a class="sourceLine" id="cb2-13" title="13"><span class="co">#####################################################################################################</span></a>
+<a class="sourceLine" id="cb2-14" title="14"><span class="co">### Plot                                                                    </span></a>
+<a class="sourceLine" id="cb2-15" title="15"><span class="co">#####################################################################################################</span></a>
+<a class="sourceLine" id="cb2-16" title="16"></a>
+<a class="sourceLine" id="cb2-17" title="17">plot &lt;-<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> timeToMaturity, <span class="dt">y =</span> rate)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb2-18" title="18"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">size =</span> <span class="dv">3</span>) <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">fill =</span> <span class="ot">FALSE</span>)<span class="op">+</span></a>
+<a class="sourceLine" id="cb2-19" title="19"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb2-20" title="20"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="st">&quot;bottom&quot;</span>,</a>
+<a class="sourceLine" id="cb2-21" title="21">        <span class="dt">legend.title =</span> <span class="kw">element_blank</span>(),</a>
+<a class="sourceLine" id="cb2-22" title="22">        <span class="dt">plot.caption=</span><span class="kw">element_text</span>(<span class="dt">hjust=</span><span class="dv">0</span>),</a>
+<a class="sourceLine" id="cb2-23" title="23">        <span class="dt">plot.subtitle=</span><span class="kw">element_text</span>(<span class="dt">face=</span><span class="st">&quot;italic&quot;</span>),</a>
+<a class="sourceLine" id="cb2-24" title="24">        <span class="dt">plot.title=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">16</span>,<span class="dt">face=</span><span class="st">&quot;bold&quot;</span>))<span class="op">+</span></a>
+<a class="sourceLine" id="cb2-25" title="25"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x=</span><span class="st">&quot;Time to Maturity&quot;</span>,<span class="dt">y=</span><span class="st">&quot;Percent&quot;</span>,</a>
+<a class="sourceLine" id="cb2-26" title="26">       <span class="dt">title=</span><span class="st">&quot;US Treasury&quot;</span>,</a>
+<a class="sourceLine" id="cb2-27" title="27">       <span class="dt">subtitle=</span><span class="st">&quot;US Treasury&quot;</span>,</a>
+<a class="sourceLine" id="cb2-28" title="28">       <span class="dt">caption=</span><span class="st">&quot;Source: Random numbers&quot;</span>)</a>
+<a class="sourceLine" id="cb2-29" title="29"></a>
+<a class="sourceLine" id="cb2-30" title="30">plot </a></code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+</div>
+<div id="bar-chart" class="section level3">
+<h3><span class="header-section-number">1.1.3</span> Bar Chart</h3>
+<p><em>Bar Chart with different colors for positive and negative numbers</em></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="co">#library(tidyverse)</span></a>
+<a class="sourceLine" id="cb3-2" title="2"><span class="co">#####################################################################################################</span></a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="co">### Create sample dataframe                                                                       </span></a>
+<a class="sourceLine" id="cb3-4" title="4"><span class="co">#####################################################################################################</span></a>
+<a class="sourceLine" id="cb3-5" title="5">df &lt;-<span class="st"> </span><span class="kw">tibble</span>(</a>
+<a class="sourceLine" id="cb3-6" title="6">  <span class="dt">timeToMaturity =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">10</span>,<span class="dv">20</span>,<span class="dv">30</span>),</a>
+<a class="sourceLine" id="cb3-7" title="7">  <span class="dt">bondName =</span> <span class="kw">paste</span>(<span class="st">&quot;UST&quot;</span>, timeToMaturity, <span class="dt">sep=</span><span class="st">&quot;&quot;</span>),</a>
+<a class="sourceLine" id="cb3-8" title="8">  <span class="dt">rate =</span> <span class="kw">c</span>(<span class="fl">1.5</span>,<span class="fl">1.45</span>,<span class="fl">1.25</span>,<span class="fl">1.35</span>,<span class="fl">1.60</span>,<span class="fl">1.75</span>,<span class="fl">1.80</span>,<span class="fl">2.15</span>,<span class="fl">2.2</span>),</a>
+<a class="sourceLine" id="cb3-9" title="9">  <span class="dt">relativeValue =</span> <span class="kw">round</span>(<span class="kw">runif</span>(<span class="dv">9</span>, <span class="dt">min=</span><span class="op">-</span><span class="dv">2</span>, <span class="dt">max=</span><span class="dv">2</span>),<span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb3-10" title="10">) </a>
+<a class="sourceLine" id="cb3-11" title="11">df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb3-12" title="12"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">pos =</span> relativeValue <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="co">#Add for showing different colors for neg or pos</span></a>
+<a class="sourceLine" id="cb3-13" title="13"></a>
+<a class="sourceLine" id="cb3-14" title="14"><span class="co">#####################################################################################################</span></a>
+<a class="sourceLine" id="cb3-15" title="15"><span class="co">### Plot                                                                    </span></a>
+<a class="sourceLine" id="cb3-16" title="16"><span class="co">#####################################################################################################</span></a>
+<a class="sourceLine" id="cb3-17" title="17">plot &lt;-<span class="st"> </span><span class="kw">ggplot</span>(df, </a>
+<a class="sourceLine" id="cb3-18" title="18">              <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> timeToMaturity, <span class="dt">y =</span> relativeValue, <span class="dt">fill =</span> pos)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb3-19" title="19"><span class="st">  </span><span class="kw">geom_col</span>() <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb3-20" title="20"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb3-21" title="21"><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span>, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>)<span class="op">+</span></a>
+<a class="sourceLine" id="cb3-22" title="22"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="st">&quot;bottom&quot;</span>,</a>
+<a class="sourceLine" id="cb3-23" title="23">        <span class="dt">legend.title =</span> <span class="kw">element_blank</span>(),</a>
+<a class="sourceLine" id="cb3-24" title="24">        <span class="dt">plot.caption=</span><span class="kw">element_text</span>(<span class="dt">hjust=</span><span class="dv">0</span>),</a>
+<a class="sourceLine" id="cb3-25" title="25">        <span class="dt">plot.subtitle=</span><span class="kw">element_text</span>(<span class="dt">face=</span><span class="st">&quot;italic&quot;</span>),</a>
+<a class="sourceLine" id="cb3-26" title="26">        <span class="dt">plot.title=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">16</span>,<span class="dt">face=</span><span class="st">&quot;bold&quot;</span>))<span class="op">+</span></a>
+<a class="sourceLine" id="cb3-27" title="27"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x=</span><span class="st">&quot;Time to Maturity&quot;</span>,<span class="dt">y=</span><span class="st">&quot;Basispoints&quot;</span>,</a>
+<a class="sourceLine" id="cb3-28" title="28">       <span class="dt">title=</span><span class="st">&quot;US Treasury Relative value&quot;</span>,</a>
+<a class="sourceLine" id="cb3-29" title="29">       <span class="dt">subtitle=</span><span class="st">&quot;Bonds trading cheap (green) vs expensive (red)&quot;</span>,</a>
+<a class="sourceLine" id="cb3-30" title="30">       <span class="dt">caption=</span><span class="st">&quot;Source: Random numbers&quot;</span>)<span class="op">+</span></a>
+<a class="sourceLine" id="cb3-31" title="31"><span class="st">      </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;brown3&quot;</span>, <span class="st">&quot;darkgreen&quot;</span>), <span class="dt">guide =</span> <span class="ot">FALSE</span>)<span class="op">+</span><span class="st"> </span><span class="co">#Setting colors for bars</span></a>
+<a class="sourceLine" id="cb3-32" title="32"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">limits=</span><span class="kw">c</span>(<span class="op">-</span><span class="kw">max</span>(<span class="kw">abs</span>(df<span class="op">$</span>relativeValue)),<span class="kw">max</span>(<span class="kw">abs</span>(df<span class="op">$</span>relativeValue)))) <span class="co">##Keep pos and neg y axis same length</span></a>
+<a class="sourceLine" id="cb3-33" title="33"></a>
+<a class="sourceLine" id="cb3-34" title="34">plot </a></code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 
 </div>
 </div>

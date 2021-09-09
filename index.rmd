@@ -15,4 +15,3 @@ library(tidyverse)
 
 *This repository includes useful plots and tables.*
 
-https://aeturrell.github.io/coding-for-economists/vis-common-plots.html#id18
